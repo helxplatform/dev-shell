@@ -10,5 +10,5 @@ into the container.
 
 ## Use in comibination with a helm chart
 
-The helm chart found in dev-shell-chart is a useful way to deploy as it contains some
-convenient mapping and environment definitions.
+The helm chart found in [dev-shell-chart](https://github.com/helxplatform/dev-shell-chart)
+is a useful way to deploy as it contains some convenient mapping and environment definitions.
