@@ -81,13 +81,15 @@ pipeline {
         container(name: 'tools', shell: '/bin/sh') {
           sh '''
           echo generate targets
-          python /app/kaniko_destination.py --docker_repository=repositories.renci.org/helxplatform/dev-shell --branch_name=$BRANCH_NAME --commit_id=$GIT_COMMIT --path=.
+          python /app/kaniko_destination.py --docker_repository=helxplatform/dev-shell --branch_name=$BRANCH_NAME --commit_id=$GIT_COMMIT --path=. > ../destinations.txt
           '''
         }
         container(name: 'kaniko', shell: '/busybox/sh') {
           sh '''
-          echo build
-          /kaniko/executor --context . --destination helxplatform/dev-shell:$BRANCH_NAME
+          echo build 
+          echo destinations arguments:
+          cat ../destinations.txt
+          /kaniko/executor --context . `cat ../destinations.txt`
           '''
         }
       }
