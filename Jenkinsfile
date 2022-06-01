@@ -82,7 +82,7 @@ pipeline {
           sh '''
           echo build
           cd apps/imagej
-          /kaniko/executor --dockerfile Docker.imagej --context . --verbosity debug --destination helxplatform/dev-shell:$BRANCH_NAME
+          /kaniko/executor --context . --destination helxplatform/dev-shell:$BRANCH_NAME
           '''
         }
       }
