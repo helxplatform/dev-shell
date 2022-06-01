@@ -81,7 +81,9 @@ pipeline {
         container(name: 'tools', shell: '/bin/sh') {
           sh '''
           echo generate targets
-          python /app/kaniko_destination.py --docker_repository helxplatform/cloudtop --branch_name=$BRANCH_NAME --commit_id=$GIT_COMMIT --path /home/jenkins/agent
+          pwd
+          ls -a
+          python /app/kaniko_destination.py --docker_repository repositories.renci.org/helxplatform/dev-shell --branch_name=$BRANCH_NAME --commit_id=$GIT_COMMIT --path dev-shell
           '''
         }
         container(name: 'kaniko', shell: '/busybox/sh') {
