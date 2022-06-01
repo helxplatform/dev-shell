@@ -36,7 +36,7 @@ pipeline {
           - name: tools
             command:
             - /bin/cat
-            image: wateim/jenkins-tools:latest
+            image: containers.renci.org/helxplatform/build-tools
             imagePullPolicy: Always
             tty: true
             volumeMounts:
@@ -78,10 +78,15 @@ pipeline {
         DOCKER_REGISTRY = "${env.DOCKER_REGISTRY}"
       }
       steps {
+        container(name: 'tools', shell: '/bin/sh') {
+          sh '''
+          echo generate targets
+          python /app/kaniko_destination.py --docker_repository helxplatform/cloudtop --branch_name=$BRANCH_NAME --commit_id=$GIT_COMMIT --path /home/jenkins/agent
+          '''
+        }
         container(name: 'kaniko', shell: '/busybox/sh') {
           sh '''
           echo build
-          cd apps/imagej
           /kaniko/executor --context . --destination helxplatform/dev-shell:$BRANCH_NAME
           '''
         }
