@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:jammy
 USER 0
 SHELL ["/bin/bash", "-c"]
 ENV SHELL /bin/bash
