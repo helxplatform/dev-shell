@@ -29,6 +29,8 @@ pipeline {
               mountPath: /kaniko/.docker
             - name: workspace
               mountPath: /home/jenkins/agent
+            - name: tmp
+              mountPath: /tmp
           - name: tools
             command:
             - /bin/cat
@@ -54,6 +56,15 @@ pipeline {
                    items:
                    - key: .dockerconfigjson
                      path: config.json
+           - name: tmp
+             ephemeral:
+               volumeClaimTemplate:
+                 spec:
+                   accessModes: [ "ReadWriteOnce" ]
+                   storageClassName: nvme-ephemeral
+                   resources:
+                     requests:
+                       storage: 2G
            - name: workspace
              ephemeral:
                volumeClaimTemplate:
