@@ -31,6 +31,8 @@ pipeline {
               mountPath: /home/jenkins/agent
             - name: tmp
               mountPath: /tmp
+            - name: cache
+              mountPath: /var/cache
           - name: tools
             command:
             - /bin/cat
@@ -43,12 +45,14 @@ pipeline {
           initContainers:
           - name: init
             image: busybox:1.28
-            command: ['chmod', '777', '/x-workspace', '/x-tmp']
+            command: ['chmod', '777', '/x-workspace', '/x-tmp', '/x-cache']
             volumeMounts:
             - name: workspace
               mountPath: /x-workspace
             - name: tmp
               mountPath: /x-tmp
+            - name: cache
+              mountPath: /x-cache
           volumes:
            - name: jenkins-cfg
              projected:
@@ -59,6 +63,15 @@ pipeline {
                    - key: .dockerconfigjson
                      path: config.json
            - name: tmp
+             ephemeral:
+               volumeClaimTemplate:
+                 spec:
+                   accessModes: [ "ReadWriteOnce" ]
+                   storageClassName: nvme-ephemeral
+                   resources:
+                     requests:
+                       storage: 2G
+           - name: cache
              ephemeral:
                volumeClaimTemplate:
                  spec:
