@@ -67,7 +67,7 @@ def main(args):
             filename = args.object.split('/')[-1]
             obj = resource.Object(bucket.name,args.object)
             print("getting: {bucket_name}:{filename}".format(bucket_name=bucket.name,filename=filename))
-            obj.download_file(filename,Config=config)
+            bucket.download_file(args.object,filename,Config=config)
          elif args.command == 'put':
             filename = args.src.split('/')[-1]
             prefix = args.dst
