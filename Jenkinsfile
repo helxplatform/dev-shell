@@ -43,10 +43,12 @@ pipeline {
           initContainers:
           - name: init
             image: busybox:1.28
-            command: ['chmod', '777', '/workspace']
+            command: ['chmod', '777', '/x-workspace', '/x-tmp']
             volumeMounts:
             - name: workspace
-              mountPath: /workspace
+              mountPath: /x-workspace
+            - name: tmp
+              mountPath: /x-tmp
           volumes:
            - name: jenkins-cfg
              projected:
