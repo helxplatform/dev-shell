@@ -33,6 +33,8 @@ pipeline {
               mountPath: /tmp
             - name: cache
               mountPath: /var/cache
+            - name: kaniko
+              mountPath: /kaniko
           - name: tools
             command:
             - /bin/cat
@@ -72,6 +74,15 @@ pipeline {
                      requests:
                        storage: 2G
            - name: cache
+             ephemeral:
+               volumeClaimTemplate:
+                 spec:
+                   accessModes: [ "ReadWriteOnce" ]
+                   storageClassName: nvme-ephemeral
+                   resources:
+                     requests:
+                       storage: 2G
+           - name: kaniko
              ephemeral:
                volumeClaimTemplate:
                  spec:
