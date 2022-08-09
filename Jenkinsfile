@@ -16,7 +16,7 @@ pipeline {
           - name: kaniko
             command:
             - /busybox/cat
-            image: containers.renci.org/acis/kaniko//executor:latest
+            image: containers.renci.org/acis/kaniko/executor:latest
             imagePullPolicy: Always
             resources:
               requests:
