@@ -16,7 +16,7 @@ pipeline {
           - name: kaniko
             command:
             - /busybox/cat
-            image: gcr.io/kaniko-project/executor:debug
+            image: containers.renci.org/acis/kaniko//executor:latest
             imagePullPolicy: Always
             resources:
               requests:
