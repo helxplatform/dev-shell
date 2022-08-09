@@ -25,14 +25,16 @@ pipeline {
                 cpu: 1
             tty: true
             volumeMounts:
-            - name: jenkins-cfg
-              mountPath: /kaniko/.docker
-            - name: workspace
-              mountPath: /home/jenkins/agent
-            - name: tmp
-              mountPath: /tmp
             - name: cache
               mountPath: /var/cache
+            - name: jenkins-cfg
+              mountPath: /kaniko/.docker
+            - name: kaniko
+              mountPath: /kaniko
+            - name: tmp
+              mountPath: /tmp
+            - name: workspace
+              mountPath: /home/jenkins/agent
           - name: tools
             command:
             - /bin/cat
@@ -45,24 +47,18 @@ pipeline {
           initContainers:
           - name: init
             image: busybox:1.28
-            command: ['chmod', '777', '/x-workspace', '/x-tmp', '/x-cache']
+            command: ['chmod', '777', '/x-workspace', '/x-tmp', '/x-cache', '/x-kaniko']
             volumeMounts:
-            - name: workspace
-              mountPath: /x-workspace
-            - name: tmp
-              mountPath: /x-tmp
             - name: cache
               mountPath: /x-cache
+            - name: kaniko
+              mountPath: /x-kaniko
+            - name: tmp
+              mountPath: /x-tmp
+            - name: workspace
+              mountPath: /x-workspace
           volumes:
-           - name: jenkins-cfg
-             projected:
-               sources:
-               - secret:
-                   name: rencibuild-imagepull-secret
-                   items:
-                   - key: .dockerconfigjson
-                     path: config.json
-           - name: tmp
+           - name: cache
              ephemeral:
                volumeClaimTemplate:
                  spec:
@@ -71,7 +67,24 @@ pipeline {
                    resources:
                      requests:
                        storage: 2G
-           - name: cache
+           - name: jenkins-cfg
+             projected:
+               sources:
+               - secret:
+                   name: rencibuild-imagepull-secret
+                   items:
+                   - key: .dockerconfigjson
+                     path: config.json
+           - name: kaniko
+             ephemeral:
+               volumeClaimTemplate:
+                 spec:
+                   accessModes: [ "ReadWriteOnce" ]
+                   storageClassName: nvme-ephemeral
+                   resources:
+                     requests:
+                       storage: 2G
+           - name: tmp
              ephemeral:
                volumeClaimTemplate:
                  spec:
