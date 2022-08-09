@@ -16,6 +16,9 @@ pipeline {
           - name: kaniko
             command:
             - /busybox/cat
+            env:
+              - name: KANIKO_DIR
+                value: /kaniko-x
             image: containers.renci.org/acis/kaniko/executor:debug
             imagePullPolicy: Always
             resources:
@@ -30,7 +33,7 @@ pipeline {
             - name: jenkins-cfg
               mountPath: /kaniko/.docker
             - name: kaniko
-              mountPath: /kaniko
+              mountPath: /kaniko-x
             - name: tmp
               mountPath: /tmp
             - name: workspace
