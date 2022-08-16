@@ -24,11 +24,11 @@ pipeline {
             resources:
               requests:
                 cpu: 1
-                ephemeral-storage: 1G
+                ephemeral-storage: 512M
                 memory: 4G
               limits:
                 cpu: 1
-                ephemeral-storage: 1G
+                ephemeral-storage: 512M
                 memory: 4G
             tty: true
             volumeMounts:
