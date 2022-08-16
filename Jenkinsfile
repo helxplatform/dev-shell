@@ -131,7 +131,7 @@ pipeline {
           echo build 
           echo destinations arguments:
           cat ../destinations.txt
-          /kaniko/executor --context . `cat ../destinations.txt`
+          /kaniko/executor --context . `cat ../destinations.txt` --kaniko-dir=/kaniko-x
           '''
         }
       }
