@@ -115,7 +115,7 @@ pipeline {
   stages {
     stage('Build-Push') {
       environment {
-        PATH = "/busybox:/kaniko:$PATH"
+        PATH = "/busybox:/kaniko-x:$PATH"
         DOCKERHUB_CREDS = credentials("${env.REGISTRY_CREDS_ID_STR}")
         DOCKER_REGISTRY = "${env.DOCKER_REGISTRY}"
       }
