@@ -32,8 +32,8 @@ pipeline {
                 memory: 4G
             tty: true
             volumeMounts:
-            - name: cache
-              mountPath: /var/cache
+            - name: var
+              mountPath: /var
             - name: jenkins-cfg
               mountPath: /kaniko/.docker
             - name: kaniko
@@ -54,10 +54,10 @@ pipeline {
           initContainers:
           - name: init
             image: busybox:1.28
-            command: ['chmod', '777', '/x-workspace', '/x-tmp', '/x-cache', '/x-kaniko']
+            command: ['chmod', '777', '/x-workspace', '/x-tmp', '/x-var', '/x-kaniko' ]
             volumeMounts:
-            - name: cache
-              mountPath: /x-cache
+            - name: var
+              mountPath: /x-var
             - name: kaniko
               mountPath: /x-kaniko
             - name: tmp
@@ -65,7 +65,7 @@ pipeline {
             - name: workspace
               mountPath: /x-workspace
           volumes:
-           - name: cache
+           - name: var
              ephemeral:
                volumeClaimTemplate:
                  spec:
