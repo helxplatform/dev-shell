@@ -24,9 +24,11 @@ pipeline {
             resources:
               requests:
                 cpu: 1
+                ephemeral-storage: 512M
                 memory: 4G
               limits:
                 cpu: 1
+                ephemeral-storage: 512M
                 memory: 4G
             tty: true
             volumeMounts:
@@ -129,7 +131,7 @@ pipeline {
           echo build 
           echo destinations arguments:
           cat ../destinations.txt
-          /kaniko-x/executor --context . `cat ../destinations.txt` --kaniko-dir /kaniko-x
+          /kaniko/executor --context . `cat ../destinations.txt`
           '''
         }
       }
