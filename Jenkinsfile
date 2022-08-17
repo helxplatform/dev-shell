@@ -19,7 +19,7 @@ pipeline {
             env:
               - name: KANIKO_DIR
                 value: /kaniko-x
-            image: containers.renci.org/acis/kaniko/executor:debug
+            image: containers.renci.org/acis/kaniko/executor:no-copy-latest
             imagePullPolicy: Always
             resources:
               requests:
@@ -53,8 +53,13 @@ pipeline {
               mountPath: /home/jenkins/agent
           initContainers:
           - name: init
-            image: busybox:1.28
-            command: ['chmod', '777', '/x-workspace', '/x-tmp', '/x-cache', '/x-kaniko' ]
+            env:
+              - name: VOLUMES
+                value: /x-workspace:/x-tmp:/x-cache
+              - name: KANIKO_DIR
+                value: /x-kaniko
+            image: containers.renci.org/helxplatform/build-init:latest
+            command: ['/app/setup.py' ]
             volumeMounts:
             - name: cache
               mountPath: /x-cache
@@ -115,7 +120,7 @@ pipeline {
   stages {
     stage('Build-Push') {
       environment {
-        PATH = "/busybox:/kaniko:$PATH"
+        PATH = "/busybox:/x-kaniko:$PATH"
         DOCKERHUB_CREDS = credentials("${env.REGISTRY_CREDS_ID_STR}")
         DOCKER_REGISTRY = "${env.DOCKER_REGISTRY}"
       }
