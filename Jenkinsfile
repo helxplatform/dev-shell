@@ -19,7 +19,7 @@ pipeline {
             env:
               - name: KANIKO_DIR
                 value: /kaniko-x
-            image: containers.renci.org/acis/kaniko/executor:no-copy-latest
+            image: containers.renci.org/acis/kaniko/executor:no-copy-debug
             imagePullPolicy: Always
             resources:
               requests:
