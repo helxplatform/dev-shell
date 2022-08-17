@@ -55,20 +55,20 @@ pipeline {
           - name: init
             env:
               - name: VOLUMES
-                value: /x-workspace:/x-tmp:/x-cache
+                value: /workspace-x:/tmp-x:/cache-x
               - name: KANIKO_DIR
                 value: /kaniko-x
             image: containers.renci.org/helxplatform/build-init:latest
             command: ['/app/setup.py' ]
             volumeMounts:
             - name: cache
-              mountPath: /x-cache
+              mountPath: /cache-x
             - name: kaniko
-              mountPath: /x-kaniko
+              mountPath: /kaniko-x
             - name: tmp
-              mountPath: /x-tmp
+              mountPath: /tmp-x
             - name: workspace
-              mountPath: /x-workspace
+              mountPath: /workspace-x
           volumes:
            - name: cache
              ephemeral:
