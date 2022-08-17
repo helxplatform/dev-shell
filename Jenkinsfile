@@ -57,7 +57,7 @@ pipeline {
               - name: VOLUMES
                 value: /x-workspace:/x-tmp:/x-cache
               - name: KANIKO_DIR
-                value: /x-kaniko
+                value: /kaniko-x
             image: containers.renci.org/helxplatform/build-init:latest
             command: ['/app/setup.py' ]
             volumeMounts:
