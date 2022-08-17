@@ -35,7 +35,7 @@ pipeline {
             - name: cache
               mountPath: /var/cache
             - name: jenkins-cfg
-              mountPath: /kaniko/.docker
+              mountPath: /kaniko-x/.docker
             - name: kaniko
               mountPath: /kaniko-x
             - name: tmp
