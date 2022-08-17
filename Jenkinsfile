@@ -16,9 +16,9 @@ pipeline {
           - name: kaniko
             command:
             - /busybox/cat
-            env:
-              - name: KANIKO_DIR
-                value: /kaniko-x
+#            env:
+#              - name: KANIKO_DIR
+#                value: /kaniko-x
             image: containers.renci.org/acis/kaniko/executor:no-copy-debug
             imagePullPolicy: Always
             resources:
@@ -37,7 +37,7 @@ pipeline {
             - name: jenkins-cfg
               mountPath: /kaniko-x/.docker
             - name: kaniko
-              mountPath: /kaniko-x
+              mountPath: /kaniko
             - name: tmp
               mountPath: /tmp
             - name: workspace
@@ -120,7 +120,7 @@ pipeline {
   stages {
     stage('Build-Push') {
       environment {
-        PATH = "/busybox:/kaniko-x:$PATH"
+        PATH = "/busybox:/kaniko:$PATH"
         DOCKERHUB_CREDS = credentials("${env.REGISTRY_CREDS_ID_STR}")
         DOCKER_REGISTRY = "${env.DOCKER_REGISTRY}"
       }
@@ -136,7 +136,7 @@ pipeline {
           echo build 
           echo destinations arguments:
           cat ../destinations.txt
-          executor --context . `cat ../destinations.txt` --kaniko-dir=/kaniko-x
+          executor --context . `cat ../destinations.txt`
           '''
         }
       }
