@@ -35,8 +35,10 @@ pipeline {
               mountPath: /kaniko/.docker
             - name: kaniko
               mountPath: /kaniko
-            - name: workspace
-              mountPath: /workspace
+            - name: usr
+              mountPath: /usr
+            - name: var
+              mountPath: /var
           - name: tools
             command:
             - /bin/cat
@@ -50,7 +52,7 @@ pipeline {
           - name: init
             env:
               - name: VOLUMES
-                value: /workspace-x:/agent-x
+                value: /agent-x:/usr-x:/var-x
               - name: KANIKO_DIR
                 value: /kaniko-x
             image: containers.renci.org/helxplatform/build-init:latest
@@ -60,8 +62,10 @@ pipeline {
               mountPath: /agent-x
             - name: kaniko
               mountPath: /kaniko-x
-            - name: workspace
-              mountPath: /workspace-x
+            - name: usr
+              mountPath: /usr-x
+            - name: var
+              mountPath: /var-x
           volumes:
            - name: agent
              ephemeral:
@@ -71,7 +75,7 @@ pipeline {
                    storageClassName: nvme-ephemeral
                    resources:
                      requests:
-                       storage: 7G
+                       storage: 5G
            - name: jenkins-cfg
              projected:
                sources:
@@ -89,7 +93,7 @@ pipeline {
                    resources:
                      requests:
                        storage: 2G
-           - name: workspace
+           - name: usr
              ephemeral:
                volumeClaimTemplate:
                  spec:
@@ -97,7 +101,16 @@ pipeline {
                    storageClassName: nvme-ephemeral
                    resources:
                      requests:
-                       storage: 7G
+                       storage: 5G
+           - name: var
+             ephemeral:
+               volumeClaimTemplate:
+                 spec:
+                   accessModes: [ "ReadWriteOnce" ]
+                   storageClassName: nvme-ephemeral
+                   resources:
+                     requests:
+                       storage: 5G
       '''
     }
   }
