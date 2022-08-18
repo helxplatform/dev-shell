@@ -52,7 +52,7 @@ pipeline {
           - name: init
             env:
               - name: VOLUMES
-                value: /agent-x:/usr-x:/var-x
+                value: /agent-x
               - name: KANIKO_DIR
                 value: /kaniko-x
             image: containers.renci.org/helxplatform/build-init:latest
