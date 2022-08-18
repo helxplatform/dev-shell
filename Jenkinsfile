@@ -133,7 +133,7 @@ pipeline {
           echo build 
           echo destinations arguments:
           cat ../destinations.txt
-          executor --context=. `cat ../destinations.txt`
+          executor --context=. --single-snapshot `cat ../destinations.txt`
           '''
         }
       }
