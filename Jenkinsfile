@@ -120,7 +120,7 @@ pipeline {
           echo build 
           echo destinations arguments:
           cat ../destinations.txt
-          executor `cat ../destinations.txt`
+          executor --context=. `cat ../destinations.txt`
           '''
         }
       }
