@@ -11,14 +11,11 @@ pipeline {
           containers:
           - name: jnlp
             volumeMounts:
-            - name: workspace
+            - name: agent
               mountPath: /home/jenkins/agent
           - name: kaniko
             command:
             - /busybox/cat
-#            env:
-#              - name: KANIKO_DIR
-#                value: /kaniko-x
             image: containers.renci.org/acis/kaniko/executor:no-copy-debug
             imagePullPolicy: Always
             resources:
@@ -32,14 +29,12 @@ pipeline {
                 memory: 4G
             tty: true
             volumeMounts:
-            - name: cache
-              mountPath: /var/cache
+            - name: agent
+              mountPath: /home/jenkins/agent
             - name: jenkins-cfg
               mountPath: /kaniko/.docker
             - name: kaniko
               mountPath: /kaniko
-            - name: tmp
-              mountPath: /tmp
             - name: workspace
               mountPath: /workspace
           - name: tools
@@ -49,28 +44,26 @@ pipeline {
             imagePullPolicy: Always
             tty: true
             volumeMounts:
-            - name: workspace
+            - name: agent
               mountPath: /home/jenkins/agent
           initContainers:
           - name: init
             env:
               - name: VOLUMES
-                value: /workspace-x:/tmp-x:/cache-x
+                value: /workspace-x:/agent-x
               - name: KANIKO_DIR
                 value: /kaniko-x
             image: containers.renci.org/helxplatform/build-init:latest
             command: ['/app/setup.py' ]
             volumeMounts:
-            - name: cache
-              mountPath: /cache-x
+            - name: agent
+              mountPath: /agent-x
             - name: kaniko
               mountPath: /kaniko-x
-            - name: tmp
-              mountPath: /tmp-x
             - name: workspace
               mountPath: /workspace-x
           volumes:
-           - name: cache
+           - name: agent
              ephemeral:
                volumeClaimTemplate:
                  spec:
@@ -78,7 +71,7 @@ pipeline {
                    storageClassName: nvme-ephemeral
                    resources:
                      requests:
-                       storage: 2G
+                       storage: 7G
            - name: jenkins-cfg
              projected:
                sources:
@@ -88,15 +81,6 @@ pipeline {
                    - key: .dockerconfigjson
                      path: config.json
            - name: kaniko
-             ephemeral:
-               volumeClaimTemplate:
-                 spec:
-                   accessModes: [ "ReadWriteOnce" ]
-                   storageClassName: nvme-ephemeral
-                   resources:
-                     requests:
-                       storage: 2G
-           - name: tmp
              ephemeral:
                volumeClaimTemplate:
                  spec:
@@ -136,7 +120,7 @@ pipeline {
           echo build 
           echo destinations arguments:
           cat ../destinations.txt
-          executor `cat ../destinations.txt`
+          executor --context=. `cat ../destinations.txt`
           '''
         }
       }
