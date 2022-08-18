@@ -41,7 +41,7 @@ pipeline {
             - name: tmp
               mountPath: /tmp
             - name: workspace
-              mountPath: /home/jenkins/agent
+              mountPath: /workspace
           - name: tools
             command:
             - /bin/cat
@@ -136,7 +136,7 @@ pipeline {
           echo build 
           echo destinations arguments:
           cat ../destinations.txt
-          executor --context . `cat ../destinations.txt`
+          executor `cat ../destinations.txt`
           '''
         }
       }
